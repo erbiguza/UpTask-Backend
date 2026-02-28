@@ -123,4 +123,32 @@ const logout = async (req, res) => {
     });
 };
 
-export { signup, login, logout };
+const getUser = async (req, res) => {
+    const token = req.cookies.jwt;
+
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+            if (err) {
+                res.status(200).json({});
+            } else {
+                console.log(decodedToken);
+                const user = await pool.query(
+                    "SELECT * FROM users WHERE id = $1",
+                    [decodedToken.id],
+                );
+
+                const { first_name, last_name, email } = user.rows[0];
+
+                res.status(200).json({
+                    first_name,
+                    last_name,
+                    email,
+                });
+            }
+        });
+    } else {
+        res.status(200).json({});
+    }
+};
+
+export { signup, login, logout, getUser };
