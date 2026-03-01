@@ -131,7 +131,6 @@ const getUser = async (req, res) => {
             if (err) {
                 res.status(200).json({});
             } else {
-                console.log(decodedToken);
                 const user = await pool.query(
                     "SELECT * FROM users WHERE id = $1",
                     [decodedToken.id],

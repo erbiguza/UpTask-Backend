@@ -10,7 +10,10 @@ export const startApp = () => {
     app.use(cookieParser());
     app.use(
         cors({
-            origin: `${process.env.REACT_FRONTEND_URL}`,
+            origin: [
+                `${process.env.REACT_FRONTEND_URL}`,
+                "http://192.168.1.9:5173",
+            ],
             credentials: true,
         }),
     );
