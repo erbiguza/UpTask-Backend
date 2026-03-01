@@ -1,6 +1,7 @@
 import { pool } from "../index.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import validator from "validator";
 
 import { capitalizeFirstLetter } from "../config/globalFunctions.js";
 
@@ -33,8 +34,16 @@ const signup = async (req, res) => {
             [email],
         );
         if (checkemail.rows.length !== 0) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Email already registered!",
+            });
+        }
+
+        const emailValid = validator.isEmail(email);
+
+        if (!emailValid) {
+            return res.status(400).json({
+                message: "Please enter a valid email!",
             });
         }
 
@@ -135,14 +144,17 @@ const getUser = async (req, res) => {
                     "SELECT * FROM users WHERE id = $1",
                     [decodedToken.id],
                 );
+                if (user.rows.length > 0) {
+                    const { first_name, last_name, email } = user.rows[0];
 
-                const { first_name, last_name, email } = user.rows[0];
-
-                res.status(200).json({
-                    first_name,
-                    last_name,
-                    email,
-                });
+                    res.status(200).json({
+                        first_name,
+                        last_name,
+                        email,
+                    });
+                } else {
+                    res.status(200).json({});
+                }
             }
         });
     } else {
