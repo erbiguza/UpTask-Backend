@@ -162,4 +162,48 @@ const getUser = async (req, res) => {
     }
 };
 
-export { signup, login, logout, getUser };
+const changePassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.user.id;
+
+    try {
+        const result = await pool.query("SELECT * FROM users WHERE id = $1", [
+            id,
+        ]);
+
+        if (oldPassword === newPassword) {
+            return res.status(400).json({
+                message: "New password must be different",
+            });
+        }
+
+        const match = await bcrypt.compare(
+            oldPassword,
+            result.rows[0].password,
+        );
+        if (match) {
+            const salt = await bcrypt.genSalt();
+            const hashedPass = await bcrypt.hash(newPassword, salt);
+
+            await pool.query("UPDATE users SET password = $1 WHERE id = $2", [
+                hashedPass,
+                id,
+            ]);
+
+            res.status(200).json({
+                message: "Password updated successfully",
+            });
+        } else {
+            return res.status(401).json({
+                message: "Old password is wrong",
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
+
+export { signup, login, logout, getUser, changePassword };
