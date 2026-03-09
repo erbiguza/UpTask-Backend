@@ -145,12 +145,14 @@ const getUser = async (req, res) => {
                     [decodedToken.id],
                 );
                 if (user.rows.length > 0) {
-                    const { first_name, last_name, email } = user.rows[0];
+                    const { first_name, last_name, email, profile_pic } =
+                        user.rows[0];
 
                     res.status(200).json({
                         first_name,
                         last_name,
                         email,
+                        profile_pic,
                     });
                 } else {
                     res.status(200).json({});
