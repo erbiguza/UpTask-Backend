@@ -21,4 +21,24 @@ const getDefaultProfilePictures = async (req, res) => {
     }
 };
 
-export { getDefaultProfilePictures };
+const setProfilePic = async (req, res) => {
+    const id = req.user.id;
+    const { profilePic } = req.body;
+    try {
+        const result = await pool.query(
+            "UPDATE users SET profile_pic = $1 WHERE id = $2",
+            [profilePic, id],
+        );
+
+        res.status(200).json({
+            message: "Profile pic updated",
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
+
+export { getDefaultProfilePictures, setProfilePic };
