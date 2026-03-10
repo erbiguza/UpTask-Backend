@@ -1,5 +1,6 @@
 import express from "express";
 import authRouter from "./routes/authRoutes.js";
+import pictureRouter from "./routes/pictureRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
@@ -21,6 +22,7 @@ export const startApp = () => {
     );
 
     app.use(`${process.env.API}/auth`, authRouter);
+    app.use(`${process.env.API}/pictures`, pictureRouter);
 
     return app;
 };
