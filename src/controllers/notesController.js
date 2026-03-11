@@ -25,4 +25,24 @@ const createNote = async (req, res) => {
     }
 };
 
-export { createNote };
+const getNotes = async (req, res) => {
+    const id = req.user.id;
+
+    try {
+        const result = await pool.query(
+            "SELECT * FROM notes WHERE owner_id = $1",
+            [id],
+        );
+
+        res.status(200).json({
+            notes: result.rows,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
+
+export { createNote, getNotes };
