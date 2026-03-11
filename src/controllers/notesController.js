@@ -45,4 +45,35 @@ const getNotes = async (req, res) => {
     }
 };
 
-export { createNote, getNotes };
+const deleteNote = async (req, res) => {
+    const id = req.user.id;
+    const note_id = req.params.id;
+
+    try {
+        const your_note = await pool.query(
+            "SELECT * FROM notes WHERE owner_id = $1 AND id = $2",
+            [id, note_id],
+        );
+
+        if (your_note.rows.length > 0) {
+            await pool.query(
+                "DELETE FROM notes WHERE owner_id = $1 AND id = $2",
+                [id, note_id],
+            );
+            res.status(200).json({
+                message: "Note deleted succesfully",
+            });
+        } else {
+            res.status(400).json({
+                message: "Invalid note",
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
+
+export { createNote, getNotes, deleteNote };
