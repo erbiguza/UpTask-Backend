@@ -1,9 +1,10 @@
 import express from "express";
-import authRouter from "./routes/authRoutes.js";
-import pictureRouter from "./routes/pictureRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import multer from "multer";
+
+import authRouter from "./routes/authRoutes.js";
+import pictureRouter from "./routes/pictureRoute.js";
+import noteRouter from "./routes/notesRoute.js";
 
 export const startApp = () => {
     const app = express();
@@ -23,6 +24,7 @@ export const startApp = () => {
 
     app.use(`${process.env.API}/auth`, authRouter);
     app.use(`${process.env.API}/pictures`, pictureRouter);
+    app.use(`${process.env.API}/notes`, noteRouter);
 
     return app;
 };
