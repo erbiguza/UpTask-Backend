@@ -60,7 +60,7 @@ class Task {
              SET task = COALESCE($1, task),
                  duedate = COALESCE($2, duedate),
                  priority = COALESCE($3, priority)
-             WHERE task_id = $4 AND owner_id = $5`,
+             WHERE id = $4 AND owner_id = $5`,
                 [editedTask, editedDate, editedPriority, task_id, owner_id],
             );
 

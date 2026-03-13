@@ -5,6 +5,7 @@ import cors from "cors";
 import authRouter from "./routes/authRoutes.js";
 import pictureRouter from "./routes/pictureRoute.js";
 import noteRouter from "./routes/notesRoute.js";
+import taskRouter from "./routes/taskRoutes.js";
 
 export const startApp = () => {
     const app = express();
@@ -25,6 +26,7 @@ export const startApp = () => {
     app.use(`${process.env.API}/auth`, authRouter);
     app.use(`${process.env.API}/pictures`, pictureRouter);
     app.use(`${process.env.API}/notes`, noteRouter);
+    app.use(`${process.env.API}/tasks`, taskRouter);
 
     return app;
 };
