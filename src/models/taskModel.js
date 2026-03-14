@@ -12,11 +12,15 @@ class Task {
             return { success: false, message: "Please Log In!" };
         }
         try {
-            await pool.query(
-                "INSERT INTO tasks (owner_id, task, duedate, priority) VALUES ($1, $2, $3, $4)",
+            const result = await pool.query(
+                "INSERT INTO tasks (owner_id, task, duedate, priority) VALUES ($1, $2, $3, $4) RETURNING *",
                 [owner_id, this.task, this.duedate, this.priority],
             );
-            return { success: true, message: "Task Created Successfully!" };
+            return {
+                success: true,
+                message: "Task Created Successfully!",
+                task: result.rows[0],
+            };
         } catch (error) {
             return { success: false, error: error.message };
         }

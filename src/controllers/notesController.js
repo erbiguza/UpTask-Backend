@@ -11,11 +11,13 @@ const createNote = async (req, res) => {
     }
     try {
         const result = await pool.query(
-            "INSERT INTO notes(note, owner_id) VALUES ($1, $2)",
+            "INSERT INTO notes(note, owner_id) VALUES ($1, $2) RETURNING *",
             [note, owner_id],
         );
+
         res.status(200).json({
             message: "Note created successfully",
+            task: result.rows[0],
         });
     } catch (error) {
         res.status(500).json({

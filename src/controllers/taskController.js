@@ -13,6 +13,7 @@ const createTask = async (req, res) => {
         if (result.success === true) {
             res.status(200).json({
                 message: result.message,
+                task: result.task,
             });
         } else if (result.error) {
             throw new Error({ message: result.error });
