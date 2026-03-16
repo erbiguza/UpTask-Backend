@@ -114,4 +114,27 @@ const deleteTask = async (req, res) => {
     }
 };
 
-export { createTask, getTasks, updateTask, deleteTask };
+const finishTask = async (req, res) => {
+    const user_id = req.user.id;
+    const task_id = req.params.id;
+
+    try {
+        const result = await Task.finishTask(user_id, task_id);
+        if (result.success === true) {
+            res.status(200).json(result);
+        } else if (result.error) {
+            throw new Error(result.error);
+        } else {
+            res.status(400).json({
+                message: result.message,
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
+
+export { createTask, getTasks, updateTask, deleteTask, finishTask };

@@ -95,6 +95,21 @@ class Task {
             return { success: false, error: error.message };
         }
     }
+
+    static async finishTask(owner_id, task_id) {
+        if (!owner_id || !task_id) {
+            return { success: false, message: "Cannot Delete Task!" };
+        }
+        try {
+            await pool.query(
+                "UPDATE tasks SET finished = true WHERE id = $1 AND owner_id = $2",
+                [task_id, owner_id],
+            );
+            return { success: true, message: "Task Finished!" };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
 }
 
 export default Task;
